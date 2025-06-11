@@ -1,0 +1,13 @@
+{% extends 'ordem_servico/base.html' %}
+
+{% block title %}Editar Ordem de Serviço{% endblock %}
+
+{% block content %}
+<h2>Editar Ordem de Serviço</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Salvar alterações</button>
+    <a href="{% url 'lista_ordens' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

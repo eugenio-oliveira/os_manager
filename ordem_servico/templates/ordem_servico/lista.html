@@ -1,0 +1,39 @@
+{% extends 'ordem_servico/base.html' %}
+
+{% block title %}Lista de OS{% endblock %}
+
+{% block content %}
+<a href="{% url 'criar_ordem' %}" class="btn btn-primary mb-3">Nova OS</a>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Responsável</th>
+            <th>Situação</th>
+            <th>Recebimento</th>
+            <th>Prev. de Entrega</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for os in ordens %}
+        <tr>
+            <td><a href="{% url 'detalhar_ordem' os.id %}">#{{ os.id }}</a></td>
+            <td>{{ os.cliente }}</td>
+            <td>{{ os.responsavel }}</td>
+            <td>{{ os.get_situacao_display }}</td>
+            <td>{{ os.data_os|date:"F j, Y" }}</td>
+            <td>{{ os.previsao_entrega|date:"j/m/Y" }}</td>
+            <td>
+                {% if os.situacao != "fechada" and os.get_situacao_display != "Fechada" %}
+                    <a href="{% url 'editar_ordem' os.id %}" class="btn btn-sm btn-warning">Editar</a>
+                {% else %}
+                    <a class="btn btn-sm btn-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Editar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

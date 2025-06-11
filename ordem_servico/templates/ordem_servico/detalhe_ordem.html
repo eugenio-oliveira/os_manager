@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalhes da Ordem de Serviço</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+
+            .os-container {
+                page-break-after: always;
+            }
+
+            .os-container:last-of-type {
+                page-break-after: auto;
+            }
+        }
+
+        body {
+            padding: 2rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .os-container {
+            border: 2px solid #333;
+            padding: 2rem;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .logo {
+            width: 180px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-top: 1.5rem;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .info p {
+            margin: 4px 0;
+        }
+
+        .signature-section {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signature {
+            width: 45%;
+            text-align: center;
+        }
+
+        .signature .line {
+            border-top: 1px solid #000;
+            margin-top: 3rem;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print mb-4">
+        <a href="{% url 'lista_ordens' %}" class="btn btn-secondary">← Voltar</a>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir 2 Vias</button>
+        <br />
+        <br />
+        <br />
+    </div>
+
+    {% for via in vias %}
+    <div class="os-container">
+        <div class="header">
+            <img height="60" width="60" src="https://media-for2-1.cdn.whatsapp.net/v/t61.24694-24/473401318_1614345082779788_4500143999245062051_n.jpg?ccb=11-4&oh=01_Q5Aa1wEFwTNupRAPjaDAHZdPqoSdEtLEO--sBbesI41mWUD3Bg&oe=68557F82&_nc_sid=5e03e0&_nc_cat=111" alt="Logo da Empresa">
+            <div>
+                <h5 class="text-end mb-0">ORDEM DE SERVIÇO</h5>
+                <small class="text-muted">VIA DO {{ via|upper }}</small>
+            </div>
+        </div>
+
+        <div class="info">
+            <p><strong>Nº:</strong> {{ ordem.id }}</p>
+            <p><strong>Cliente:</strong> {{ ordem.cliente.nome }}</p>
+            <p><strong>CPF:</strong> {{ ordem.cliente.cpf }}</p>
+            <p><strong>Telefone:</strong> {{ ordem.cliente.telefone }}</p>
+            <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }}</p>
+            <p><strong>Previsão de Entrega:</strong> {{ ordem.previsao_entrega }}</p>
+            <p><strong>Canal de Venda:</strong> {{ ordem.get_canal_venda_display }}</p>
+            <p><strong>Situação:</strong> {{ ordem.get_situacao_display }}</p>
+        </div>
+
+        <div class="section-title">Descrição do Serviço</div>
+        <p>{{ ordem.descricao }}</p>
+
+        <div class="signature-section">
+            <div class="signature">
+                <div class="line"></div>
+                <p>Assinatura do Cliente</p>
+            </div>
+            <div class="signature">
+                <div class="line"></div>
+                <p>Responsável: {{ ordem.responsavel }}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Empresa Exemplo Ltda. – CNPJ: 00.000.000/0001-00</p>
+            <p>Rua das Orquídeas, 123 – Centro – São Paulo/SP</p>
+            <p>Telefone: (11) 99999-9999 – WhatsApp: (11) 98888-8888</p>
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>
