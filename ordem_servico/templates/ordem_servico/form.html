@@ -18,7 +18,7 @@
   <a href="{% url 'lista_ordens' %}" class="btn btn-secondary mb-3">← Voltar</a>
   <h2 class="mb-4">Nova Ordem de Serviço</h2>
 
-  <form method="post" id="ordemForm">
+  <form method="post" id="ordemForm" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!-- Dados Gerais -->
@@ -114,6 +114,26 @@
           {{ form.termos_garantia|add_class:"form-control" }}
         </div>
       </div>
+
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label class="form-label">Anexos</label>
+          <input type="file" name="anexos" multiple class="form-control">
+        </div>
+      </div>
+
+      {% if ordem %}
+        <div class="mb-3">
+          <strong>Anexos existentes:</strong>
+          <ul>
+            {% for anexo in ordem.anexos.all %}
+              <li><a href="{{ anexo.arquivo.url }}" target="_blank">{{ anexo.arquivo.name|cut:"anexos/" }}</a></li>
+            {% empty %}
+              <li>Nenhum anexo enviado.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     </fieldset>
 
     <button type="submit" class="btn btn-success">Salvar OS</button>
@@ -171,7 +191,7 @@
       }
     });
 
-    // Validação de CPF inline no formulário do modal
+    // Validação de CPF inline
     function validarCPF(cpf) {
       cpf = cpf.replace(/[^\d]+/g, '');
       if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
@@ -187,17 +207,17 @@
       return resto === parseInt(cpf.substring(10, 11));
     }
 
-    $('#formNovoCliente input[name="cpf"]').on('input', function () {
+    $('#cpfInput').on('input', function () {
       const cpf = $(this).val();
       if (!validarCPF(cpf)) {
+        $('#cpfError').removeClass('d-none');
         $(this).addClass('is-invalid');
       } else {
+        $('#cpfError').addClass('d-none');
         $(this).removeClass('is-invalid');
       }
     });
   });
 </script>
-
-
 </body>
 </html>

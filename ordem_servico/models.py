@@ -65,3 +65,12 @@ class OrdemServico(models.Model):
             if old.situacao == Situacao.FECHADA and self.situacao != Situacao.FECHADA:
                 raise ValueError("OS fechada não pode ser reaberta.")
         self.save()
+
+
+class Anexo(models.Model):
+    ordem_servico = models.ForeignKey(OrdemServico, related_name='anexos', on_delete=models.CASCADE)
+    arquivo = models.FileField(upload_to='anexos/')
+    descricao = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.arquivo.name
