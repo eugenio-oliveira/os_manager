@@ -3,37 +3,143 @@
 {% block title %}Lista de OS{% endblock %}
 
 {% block content %}
-<a href="{% url 'criar_ordem' %}" class="btn btn-primary mb-3">Nova OS</a>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Responsável</th>
-            <th>Situação</th>
-            <th>Recebimento</th>
-            <th>Prev. de Entrega</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for os in ordens %}
-        <tr>
-            <td><a href="{% url 'detalhar_ordem' os.id %}">#{{ os.id }}</a></td>
-            <td>{{ os.cliente }}</td>
-            <td>{{ os.responsavel }}</td>
-            <td>{{ os.get_situacao_display }}</td>
-            <td>{{ os.data_os|date:"F j, Y" }}</td>
-            <td>{{ os.previsao_entrega|date:"j/m/Y" }}</td>
-            <td>
-                {% if os.situacao != "fechada" and os.get_situacao_display != "Fechada" %}
-                    <a href="{% url 'editar_ordem' os.id %}" class="btn btn-sm btn-warning">Editar</a>
-                {% else %}
-                    <a class="btn btn-sm btn-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Editar</a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+<!-- DASHBOARD CARDS -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary shadow">
+            <div class="card-body">
+                <h5 class="card-title">Total de OS</h5>
+                <p class="card-text display-6">{{ total_ordens }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-warning shadow">
+            <div class="card-body">
+                <h5 class="card-title">Em Análise</h5>
+                <p class="card-text display-6">{{ em_analise }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success shadow">
+            <div class="card-body">
+                <h5 class="card-title">Fechadas</h5>
+                <p class="card-text display-6">{{ fechadas }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FILTRO POR SITUAÇÃO -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label for="filtroSituacao" class="form-label">Filtrar por Situação:</label>
+        <select id="filtroSituacao" class="form-select">
+            <option value="">Todas</option>
+            <option value="Em Análise">Em Análise</option>
+            <option value="Fechada">Fechada</option>
+            <option value="Aberta">Aberta</option>
+        </select>
+    </div>
+</div>
+
+<!-- TABELA DE ORDENS DE SERVIÇO -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table id="osTable" class="table table-hover table-bordered nowrap" style="width:100%">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Responsável</th>
+                    <th>Situação</th>
+                    <th>Recebimento</th>
+                    <th>Prev. de Entrega</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for os in ordens %}
+                <tr>
+                    <td><a href="{% url 'detalhar_ordem' os.id %}">#{{ os.id }}</a></td>
+                    <td>{{ os.cliente }}</td>
+                    <td>{{ os.responsavel }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if os.situacao == 'analise' %}bg-warning text-dark
+                            {% elif os.situacao == 'fechada' %}bg-success
+                            {% else %}bg-secondary{% endif %}">
+                            {{ os.get_situacao_display }}
+                        </span>
+                    </td>
+                    <td>{{ os.data_os|date:"d/m/Y" }}</td>
+                    <td>{{ os.previsao_entrega|date:"d/m/Y" }}</td>
+                    <td>
+                        {% if os.situacao != "fechada" %}
+                            <a href="{% url 'editar_ordem' os.id %}" class="btn btn-sm btn-outline-warning">Editar</a>
+                        {% else %}
+                            <span class="btn btn-sm btn-outline-secondary disabled">Editar</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- BOTÃO NOVA OS -->
+<div class="text-end mt-3">
+    <a href="{% url 'criar_ordem' %}" class="btn btn-success shadow">➕ Nova OS</a>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- jQuery e DataTables -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+
+<!-- Botões de exportação -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css" />
+
+<!-- Tradução PT-BR -->
+<script>
+    $(document).ready(function () {
+        const table = $('#osTable').DataTable({
+            responsive: true,
+            dom: 'Bfrtip',
+            buttons: [
+                { extend: 'copy', text: 'Copiar' },
+                { extend: 'excel', text: 'Excel' },
+                { extend: 'pdf', text: 'PDF' },
+                { extend: 'print', text: 'Imprimir' }
+            ],
+            language: {
+                url: "//cdn.datatables.net/plug-ins/1.13.5/i18n/pt-BR.json"
+            },
+            pageLength: 5,
+            lengthChange: false,
+            ordering: true,
+            autoWidth: false,
+        });
+
+        // Filtro por Situação
+        $('#filtroSituacao').on('change', function () {
+            const value = $(this).val();
+            table.column(3).search(value).draw();
+        });
+    });
+</script>
 {% endblock %}
