@@ -1,149 +1,136 @@
+{% extends "ordem_servico/base.html" %}
 {% load static %}
 {% load widget_tweaks %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <title>Nova Ordem de Serviço</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Nova Ordem de Serviço{% endblock %}
 
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Select2 -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-</head>
-<body>
-<div class="container mt-4">
-  <a href="{% url 'lista_ordens' %}" class="btn btn-secondary mb-3">← Voltar</a>
-  <h2 class="mb-4">Nova Ordem de Serviço</h2>
+{% block content %}
+<a href="{% url 'lista_ordens' %}" class="btn btn-secondary mb-3">← Voltar</a>
+<h2 class="mb-4">Nova Ordem de Serviço</h2>
 
-  <form method="post" id="ordemForm" enctype="multipart/form-data">
-    {% csrf_token %}
+<form method="post" id="ordemForm" enctype="multipart/form-data">
+  {% csrf_token %}
 
-    <!-- Dados Gerais -->
-    <fieldset class="border p-3 mb-4">
-      <legend class="float-none w-auto px-2">Dados Gerais</legend>
+  <fieldset class="border p-3 mb-4">
+    <legend class="float-none w-auto px-2">Dados Gerais</legend>
 
-      <div class="row">
-        <div class="col-md-6 mb-3">
-          <label for="id_cliente" class="form-label">Cliente</label>
-          {{ form.cliente|add_class:"form-select" }}
-          <button type="button" class="btn btn-outline-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalCliente">
-            + Novo Cliente
-          </button>
-        </div>
-        <div class="col-md-3 mb-3">
-          <label for="id_responsavel" class="form-label">Responsável</label>
-          {{ form.responsavel|add_class:"form-select" }}
-        </div>
-        <div class="col-md-3 mb-3">
-          <label for="id_situacao" class="form-label">Situação</label>
-          {{ form.situacao|add_class:"form-select" }}
-        </div>
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="id_cliente" class="form-label">Cliente</label>
+        {{ form.cliente|add_class:"form-select" }}
+        <button type="button" class="btn btn-outline-primary btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#modalCliente">
+          + Novo Cliente
+        </button>
       </div>
-
-      <div class="row">
-        <div class="col-md-3 mb-3">
-          <label for="id_data_os" class="form-label">Data da OS</label>
-          {{ form.data_os|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3 mb-3">
-          <label for="id_previsao_entrega" class="form-label">Previsão de entrega</label>
-          {{ form.previsao_entrega|add_class:"form-control" }}
-        </div>
-        <div class="col-md-6 mb-6">
-          <label for="id_canal_venda" class="form-label">Canal de venda</label>
-          {{ form.canal_venda|add_class:"form-select" }}
-        </div>
+      <div class="col-md-3 mb-3">
+        <label for="id_responsavel" class="form-label">Responsável</label>
+        {{ form.responsavel|add_class:"form-select" }}
       </div>
-    </fieldset>
-
-    <!-- Equipamentos -->
-    <fieldset class="border p-3 mb-4">
-      <legend class="float-none w-auto px-2">Equipamentos</legend>
-
-      <div class="row mb-3">
-        <div class="col-md-3">
-          <label for="id_equipamento" class="form-label">Equipamento</label>
-          {{ form.equipamento|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-          <label for="id_marca" class="form-label">Marca</label>
-          {{ form.marca|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-          <label for="id_modelo" class="form-label">Modelo</label>
-          {{ form.modelo|add_class:"form-control" }}
-        </div>
-        <div class="col-md-3">
-          <label for="id_serie" class="form-label">Série</label>
-          {{ form.serie|add_class:"form-control" }}
-        </div>
+      <div class="col-md-3 mb-3">
+        <label for="id_situacao" class="form-label">Situação</label>
+        {{ form.situacao|add_class:"form-select" }}
       </div>
+    </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Condições</label>
-          {{ form.condicoes|add_class:"form-control" }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Defeitos (Relatados)</label>
-          {{ form.defeitos|add_class:"form-control" }}
-        </div>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="id_data_os" class="form-label">Data da OS</label>
+        {{ form.data_os|add_class:"form-control" }}
       </div>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Acessórios</label>
-          {{ form.acessorios|add_class:"form-control" }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Solução</label>
-          {{ form.solucao|add_class:"form-control" }}
-        </div>
+      <div class="col-md-3 mb-3">
+        <label for="id_previsao_entrega" class="form-label">Previsão de entrega</label>
+        {{ form.previsao_entrega|add_class:"form-control" }}
       </div>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label class="form-label">Laudo Técnico</label>
-          {{ form.laudo_tecnico|add_class:"form-control" }}
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">Termos de Garantia</label>
-          {{ form.termos_garantia|add_class:"form-control" }}
-        </div>
+      <div class="col-md-6 mb-6">
+        <label for="id_canal_venda" class="form-label">Canal de venda</label>
+        {{ form.canal_venda|add_class:"form-select" }}
       </div>
+    </div>
+  </fieldset>
 
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <label class="form-label">Anexos</label>
-          <input type="file" name="anexos" multiple class="form-control">
-        </div>
+  <fieldset class="border p-3 mb-4">
+    <legend class="float-none w-auto px-2">Equipamentos</legend>
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="id_equipamento" class="form-label">Equipamento</label>
+        {{ form.equipamento|add_class:"form-control" }}
       </div>
+      <div class="col-md-3">
+        <label for="id_marca" class="form-label">Marca</label>
+        {{ form.marca|add_class:"form-control" }}
+      </div>
+      <div class="col-md-3">
+        <label for="id_modelo" class="form-label">Modelo</label>
+        {{ form.modelo|add_class:"form-control" }}
+      </div>
+      <div class="col-md-3">
+        <label for="id_serie" class="form-label">Série</label>
+        {{ form.serie|add_class:"form-control" }}
+      </div>
+    </div>
 
-      {% if ordem %}
-        <div class="mb-3">
-          <strong>Anexos existentes:</strong>
-          <ul>
-            {% for anexo in ordem.anexos.all %}
-              <li><a href="{{ anexo.arquivo.url }}" target="_blank">{{ anexo.arquivo.name|cut:"anexos/" }}</a></li>
-            {% empty %}
-              <li>Nenhum anexo enviado.</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-    </fieldset>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Condições</label>
+        {{ form.condicoes|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Defeitos (Relatados)</label>
+        {{ form.defeitos|add_class:"form-control" }}
+      </div>
+    </div>
 
-    <button type="submit" class="btn btn-success">Salvar OS</button>
-  </form>
-</div>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Acessórios</label>
+        {{ form.acessorios|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Solução</label>
+        {{ form.solucao|add_class:"form-control" }}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <label class="form-label">Laudo Técnico</label>
+        {{ form.laudo_tecnico|add_class:"form-control" }}
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Termos de Garantia</label>
+        {{ form.termos_garantia|add_class:"form-control" }}
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-12">
+        <label class="form-label">Anexos</label>
+        <input type="file" name="anexos" multiple class="form-control">
+      </div>
+    </div>
+
+    {% if ordem %}
+      <div class="mb-3">
+        <strong>Anexos existentes:</strong>
+        <ul>
+          {% for anexo in ordem.anexos.all %}
+            <li><a href="{{ anexo.arquivo.url }}" target="_blank">{{ anexo.arquivo.name|cut:"anexos/" }}</a></li>
+          {% empty %}
+            <li>Nenhum anexo enviado.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+  </fieldset>
+
+  <button type="submit" class="btn btn-success">Salvar OS</button>
+</form>
 
 <!-- Modal Cliente -->
 <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form method="post" action="{% url 'criar_cliente_ajax' %}" id="formNovoCliente">
+    <form id="formNovoCliente">
       {% csrf_token %}
       <div class="modal-content">
         <div class="modal-header">
@@ -163,14 +150,15 @@
     </form>
   </div>
 </div>
+{% endblock %}
 
-<!-- Scripts -->
+{% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-  $(document).ready(function () {
+  function inicializarSelect2() {
     $('#id_cliente').select2({
       width: '100%',
       placeholder: "Selecione um cliente",
@@ -179,19 +167,18 @@
         dataType: 'json',
         delay: 250,
         data: function (params) {
-          return {
-            term: params.term
-          };
+          return { term: params.term };
         },
         processResults: function (data) {
-          return {
-            results: data.results
-          };
+          return { results: data.results };
         }
       }
     });
+  }
 
-    // Validação de CPF inline
+  $(document).ready(function () {
+    inicializarSelect2();
+
     function validarCPF(cpf) {
       cpf = cpf.replace(/[^\d]+/g, '');
       if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
@@ -217,7 +204,30 @@
         $(this).removeClass('is-invalid');
       }
     });
+
+    $('#formNovoCliente').on('submit', function (e) {
+      e.preventDefault();
+      const formData = $(this).serialize();
+      $.ajax({
+        url: "{% url 'criar_cliente_ajax' %}",
+        method: "POST",
+        data: formData,
+        headers: {
+          'X-CSRFToken': $('[name=csrfmiddlewaretoken]').val()
+        },
+        success: function (data) {
+          $('#modalCliente').modal('hide');
+          $('#formNovoCliente')[0].reset();
+
+          // Adiciona o novo cliente ao select2
+          const newOption = new Option(data.nome, data.id, true, true);
+          $('#id_cliente').append(newOption).trigger('change');
+        },
+        error: function (xhr) {
+          alert(xhr.responseJSON?.erro || "Erro ao criar cliente.");
+        }
+      });
+    });
   });
 </script>
-</body>
-</html>
+{% endblock %}

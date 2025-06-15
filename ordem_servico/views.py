@@ -27,7 +27,10 @@ def criar_cliente_ajax(request):
 
         try:
             cliente = Cliente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
-            return JsonResponse({'id': cliente.id, 'nome': cliente.nome})
+            return JsonResponse({
+                'id': cliente.id,
+                'nome': f"{cliente.nome} - {cliente.cpf}"
+            })
         except IntegrityError:
             return JsonResponse({'erro': 'Erro ao salvar cliente.'}, status=400)
 
@@ -39,22 +42,27 @@ def lista_ordens(request):
     total_ordens = ordens.count()
     em_analise = ordens.filter(situacao='analise').count()
     fechadas = ordens.filter(situacao='fechada').count()
+    abertas = ordens.filter(situacao='aberta').count()
 
     context = {
         'ordens': ordens,
         'total_ordens': total_ordens,
         'em_analise': em_analise,
         'fechadas': fechadas,
+        'abertas': abertas,
     }
     return render(request, 'ordem_servico/lista.html', context)
 
 
 def criar_ordem(request):
+    cliente_id = request.GET.get('cliente_id')
+    initial = {'cliente': cliente_id} if cliente_id else None
+
     if request.method == 'POST':
         form = OrdemServicoForm(request.POST, request.FILES)
         if form.is_valid():
             ordem = form.save(commit=False)
-            ordem.criado_por = request.user  # Se for usar controle de autoria
+            ordem.criado_por = request.user
             ordem.save()
 
             arquivos = request.FILES.getlist('anexos')
@@ -66,7 +74,7 @@ def criar_ordem(request):
         else:
             messages.error(request, "Corrija os erros abaixo.")
     else:
-        form = OrdemServicoForm()
+        form = OrdemServicoForm(initial=initial)
 
     return render(request, 'ordem_servico/form.html', {
         'form': form,
