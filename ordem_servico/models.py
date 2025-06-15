@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Cliente(models.Model):
@@ -58,6 +60,12 @@ class OrdemServico(models.Model):
 
     def __str__(self):
         return f"OS #{self.id} - {self.cliente.nome} - {self.situacao}"
+
+    def clean(self):
+        if self.previsao_entrega < self.data_os:
+            raise ValidationError({
+                'previsao_entrega': _('A data de entrega não pode ser anterior à data de abertura da OS.')
+            })
 
     def salvar_status(self):
         if self.pk:

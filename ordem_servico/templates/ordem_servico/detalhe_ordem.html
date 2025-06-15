@@ -23,13 +23,13 @@
         body {
             padding: 2rem;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.95rem;
         }
 
         .os-container {
             border: 2px solid #333;
             padding: 2rem;
             margin-bottom: 4rem;
-            position: relative;
         }
 
         .logo {
@@ -40,21 +40,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .section-title {
             font-weight: bold;
-            margin-top: 1.5rem;
+            margin-top: 1.2rem;
             border-bottom: 1px solid #ccc;
+            font-size: 1rem;
         }
 
         .info p {
             margin: 4px 0;
         }
 
+        .row-cols {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .col-half {
+            width: 48%;
+        }
+
+        .col-third {
+            width: 32%;
+        }
+
         .signature-section {
-            margin-top: 3rem;
+            margin-top: 2rem;
             display: flex;
             justify-content: space-between;
         }
@@ -70,10 +85,14 @@
         }
 
         .footer {
-            margin-top: 3rem;
+            margin-top: 2rem;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #555;
+        }
+
+        .text-small {
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -81,34 +100,60 @@
     <div class="no-print mb-4">
         <a href="{% url 'lista_ordens' %}" class="btn btn-secondary">← Voltar</a>
         <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir 2 Vias</button>
-        <br />
-        <br />
-        <br />
+        <br /><br /><br />
     </div>
 
     {% for via in vias %}
     <div class="os-container">
         <div class="header">
-            <img height="60" width="60" src="https://media-for2-1.cdn.whatsapp.net/v/t61.24694-24/473401318_1614345082779788_4500143999245062051_n.jpg?ccb=11-4&oh=01_Q5Aa1wEFwTNupRAPjaDAHZdPqoSdEtLEO--sBbesI41mWUD3Bg&oe=68557F82&_nc_sid=5e03e0&_nc_cat=111" alt="Logo da Empresa">
+            <img height="60" width="60" src="https://www.codesoftware.com.br/images/ordem-servico.png" alt="Logo da Empresa">
             <div>
                 <h5 class="text-end mb-0">ORDEM DE SERVIÇO</h5>
                 <small class="text-muted">VIA DO {{ via|upper }}</small>
             </div>
         </div>
 
-        <div class="info">
-            <p><strong>Nº:</strong> {{ ordem.id }}</p>
-            <p><strong>Cliente:</strong> {{ ordem.cliente.nome }}</p>
-            <p><strong>CPF:</strong> {{ ordem.cliente.cpf }}</p>
-            <p><strong>Telefone:</strong> {{ ordem.cliente.telefone }}</p>
-            <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }}</p>
-            <p><strong>Previsão de Entrega:</strong> {{ ordem.previsao_entrega }}</p>
-            <p><strong>Canal de Venda:</strong> {{ ordem.get_canal_venda_display }}</p>
-            <p><strong>Situação:</strong> {{ ordem.get_situacao_display }}</p>
+        <div class="info row-cols text-small">
+            <div class="col-half">
+                <p><strong>Nº:</strong> {{ ordem.id }}</p>
+                <p><strong>Cliente:</strong> {{ ordem.cliente.nome }}</p>
+                <p><strong>CPF:</strong> {{ ordem.cliente.cpf }}</p>
+                <p><strong>Telefone:</strong> {{ ordem.cliente.telefone }}</p>
+                <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }}</p>
+                <p><strong>Previsão de Entrega:</strong> {{ ordem.previsao_entrega }}</p>
+            </div>
+            <div class="col-half">
+                <p><strong>Canal de Venda:</strong> {{ ordem.get_canal_venda_display }}</p>
+                <p><strong>Situação:</strong> {{ ordem.get_situacao_display }}</p>
+                <p><strong>Responsável:</strong> {{ ordem.responsavel }}</p>
+                <p><strong>Equipamento:</strong> {{ ordem.equipamento }}</p>
+                <p><strong>Marca:</strong> {{ ordem.marca }}</p>
+                <p><strong>Modelo:</strong> {{ ordem.modelo }}</p>
+                <p><strong>Série:</strong> {{ ordem.serie }}</p>
+            </div>
         </div>
 
-        <div class="section-title">Descrição do Serviço</div>
-        <p>{{ ordem.descricao }}</p>
+        <div class="section-title">Condições, Defeitos e Acessórios</div>
+        <div class="row-cols text-small">
+            <div class="col-half">
+                <p><strong>Condições:</strong><br>{{ ordem.condicoes }}</p>
+                <p><strong>Acessórios:</strong><br>{{ ordem.acessorios }}</p>
+            </div>
+            <div class="col-half">
+                <p><strong>Defeitos (Relatados):</strong><br>{{ ordem.defeitos }}</p>
+            </div>
+        </div>
+
+        <div class="section-title">Solução, Laudo e Garantia</div>
+        <div class="row-cols text-small">
+            <div class="col-half">
+                <p><strong>Solução Aplicada:</strong><br>{{ ordem.solucao }}</p>
+            </div>
+            <div class="col-half">
+                <p><strong>Laudo Técnico:</strong><br>{{ ordem.laudo_tecnico }}</p>
+                <p><strong>Termos de Garantia:</strong><br>{{ ordem.termos_garantia }}</p>
+            </div>
+        </div>
 
         <div class="signature-section">
             <div class="signature">
@@ -123,8 +168,8 @@
 
         <div class="footer">
             <p>Empresa Exemplo Ltda. – CNPJ: 00.000.000/0001-00</p>
-            <p>Rua das Orquídeas, 123 – Centro – São Paulo/SP</p>
-            <p>Telefone: (11) 99999-9999 – WhatsApp: (11) 98888-8888</p>
+            <p>Rua das Orquídeas, 123 – Centro – Teresina/PI</p>
+            <p>Telefone: (86) 99999-9999 – WhatsApp: (86) 98888-8888</p>
         </div>
     </div>
     {% endfor %}
