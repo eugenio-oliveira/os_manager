@@ -10,7 +10,7 @@ def buscar_clientes_ajax(request):
     termo = request.GET.get('term', '')
     clientes = Cliente.objects.filter(nome__icontains=termo)[:10]
     results = [
-        {'id': cliente.id, 'text': f"{cliente.nome} - {cliente.cpf}"}
+        {'id': cliente.id, 'text': f"{cliente.nome}"}
         for cliente in clientes
     ]
     return JsonResponse({'results': results})
@@ -29,7 +29,7 @@ def criar_cliente_ajax(request):
             cliente = Cliente.objects.create(nome=nome, cpf=cpf, telefone=telefone)
             return JsonResponse({
                 'id': cliente.id,
-                'nome': f"{cliente.nome} - {cliente.cpf}"
+                'nome': f"{cliente.nome}"
             })
         except IntegrityError:
             return JsonResponse({'erro': 'Erro ao salvar cliente.'}, status=400)
