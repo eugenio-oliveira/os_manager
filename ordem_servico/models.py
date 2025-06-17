@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -40,6 +41,7 @@ class OrdemServico(models.Model):
     )
     data_os = models.DateField()
     previsao_entrega = models.DateField()
+
     canal_venda = models.CharField(
         max_length=10,
         choices=CanalVenda.choices,
@@ -57,6 +59,9 @@ class OrdemServico(models.Model):
     solucao = models.TextField(blank=True)
     laudo_tecnico = models.TextField(blank=True)
     termos_garantia = models.TextField(blank=True)
+
+    data_criacao = models.DateField(auto_now_add=True)
+    hora_criacao = models.TimeField(default=timezone.now, editable=False)
 
     def __str__(self):
         return f"OS #{self.id} - {self.cliente.nome} - {self.situacao}"

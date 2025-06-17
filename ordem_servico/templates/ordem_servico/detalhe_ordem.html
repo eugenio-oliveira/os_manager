@@ -1,4 +1,5 @@
 {% load static %}
+{% load ordem_extras %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -94,6 +95,18 @@
         .text-small {
             font-size: 0.9rem;
         }
+
+        .attachment-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 5px;
+        }
+
+        .attachment-list a {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +132,7 @@
                 <p><strong>Cliente:</strong> {{ ordem.cliente.nome }}</p>
                 <p><strong>CPF:</strong> {{ ordem.cliente.cpf }}</p>
                 <p><strong>Telefone:</strong> {{ ordem.cliente.telefone }}</p>
-                <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }}</p>
+                <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }} às {{ordem.hora_criacao}}</p>
                 <p><strong>Previsão de Entrega:</strong> {{ ordem.previsao_entrega }}</p>
             </div>
             <div class="col-half">
@@ -154,6 +167,30 @@
                 <p><strong>Termos de Garantia:</strong><br>{{ ordem.termos_garantia }}</p>
             </div>
         </div>
+
+        {% if ordem.anexos.all %}
+        <div class="section-title">Anexos</div>
+        <div class="attachment-list text-small">
+            {% for anexo in ordem.anexos.all %}
+                {% with anexo.arquivo.name|extensao as ext %}
+                    <a href="{{ anexo.arquivo.url }}" target="_blank">
+                        {% if ext == ".pdf" %}
+                            <img src="{% static 'icons/pdf-icon.png' %}" alt="PDF" class="attachment-icon">
+                        {% elif ext == ".jpg" or ext == ".jpeg" or ext == ".png" %}
+                            <img src="{% static 'icons/image-icon.png' %}" alt="Imagem" class="attachment-icon">
+                        {% elif ext == ".mp4" or ext == ".mov" %}
+                            <img src="{% static 'icons/video-icon.png' %}" alt="Vídeo" class="attachment-icon">
+                        {% elif ext == ".txt" or ext == ".doc" or ext == ".docx" %}
+                            <img src="{% static 'icons/text-icon.png' %}" alt="Texto" class="attachment-icon">
+                        {% else %}
+                            <img src="{% static 'icons/file-icon.png' %}" alt="Arquivo" class="attachment-icon">
+                        {% endif %}
+                        {{ anexo.arquivo.name|slice:"20:" }}
+                    </a>
+                {% endwith %}
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <div class="signature-section">
             <div class="signature">
