@@ -5,6 +5,38 @@
 {% block content %}
 
 <!-- DASHBOARD CARDS -->
+<!-- FORMULÁRIO DE BUSCA -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row gy-2 gx-3 align-items-end">
+            <div class="col-md-4">
+                <label for="cliente" class="form-label">Cliente ou CPF</label>
+                <input type="text" class="form-control" id="cliente" name="cliente" value="{{ request.GET.cliente }}">
+            </div>
+            <div class="col-md-3">
+                <label for="situacao" class="form-label">Situação</label>
+                <select name="situacao" id="situacao" class="form-select">
+                    <option value="">Todas</option>
+                    <option value="aberta" {% if request.GET.situacao == 'aberta' %}selected{% endif %}>Aberta</option>
+                    <option value="analise" {% if request.GET.situacao == 'analise' %}selected{% endif %}>Em Análise</option>
+                    <option value="fechada" {% if request.GET.situacao == 'fechada' %}selected{% endif %}>Fechada</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="data_inicial" class="form-label">Data Inicial</label>
+                <input type="date" class="form-control" name="data_inicial" id="data_inicial" value="{{ request.GET.data_inicial }}">
+            </div>
+            <div class="col-md-2">
+                <label for="data_final" class="form-label">Data Final</label>
+                <input type="date" class="form-control" name="data_final" id="data_final" value="{{ request.GET.data_final }}">
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="submit" class="btn btn-primary w-100">🔍</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row mb-4 text-center">
     <div class="col-md-3">
         <div class="card text-white bg-primary shadow-sm">
@@ -62,7 +94,7 @@
                 {% for os in ordens %}
                 <tr>
                     <td>{{ os.id }}</td>
-                    <td>{{ os.cliente }}</td>
+                    <td>{{ os.cliente.nome|cut:"  "|truncatewords:3 }}</td>
                     <td>{{ os.cliente.cpf }}</td>
                     <td>{{ os.responsavel }}</td>
                     <td>

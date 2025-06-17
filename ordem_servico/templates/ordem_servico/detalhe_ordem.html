@@ -111,7 +111,7 @@
 </head>
 <body>
     <div class="no-print mb-4">
-        <a href="{% url 'lista_ordens' %}" class="btn btn-secondary">← Voltar</a>
+        <a href="{% url 'lista_ordens' %}" class="btn btn-secondary">← Voltar para página inicial</a>
         <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir 2 Vias</button>
         <br /><br /><br />
     </div>
@@ -132,7 +132,7 @@
                 <p><strong>Cliente:</strong> {{ ordem.cliente.nome }}</p>
                 <p><strong>CPF:</strong> {{ ordem.cliente.cpf }}</p>
                 <p><strong>Telefone:</strong> {{ ordem.cliente.telefone }}</p>
-                <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }} às {{ordem.hora_criacao}}</p>
+                <p><strong>Data de Recebimento:</strong> {{ ordem.data_os }} às {{ ordem.hora_criacao }}</p>
                 <p><strong>Previsão de Entrega:</strong> {{ ordem.previsao_entrega }}</p>
             </div>
             <div class="col-half">

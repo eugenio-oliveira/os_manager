@@ -41,15 +41,20 @@
       <div class="col-md-3 mb-3">
         <label for="id_previsao_entrega" class="form-label">Previsão de entrega</label>
         {{ form.previsao_entrega|add_class:"form-control" }}
-      </div>
-      <div class="col-md-3 mb-3">
+      </div>     
+      {% if ordem %}
+       <div class="col-md-3 mb-3">
         <label for="id_canal_venda" class="form-label">Canal de venda</label>
         {{ form.canal_venda|add_class:"form-select" }}
       </div>
-      {% if ordem %}
       <div class="col-md-3 mb-3">
         <label class="form-label">Hora da criação</label>
-        <input type="text" class="form-control" value="{{ ordem.hora_criacao|time:'H:i:s' }}" readonly>
+        <input type="text" disabled class="form-control" value="{{ ordem.hora_criacao|time:'H:i:s' }}" readonly>
+      </div>
+      {% else %}
+       <div class="col-md-6 mb-6">
+        <label for="id_canal_venda" class="form-label">Canal de venda</label>
+        {{ form.canal_venda|add_class:"form-select" }}
       </div>
       {% endif %}
     </div>
